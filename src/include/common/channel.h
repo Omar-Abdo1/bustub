@@ -45,7 +45,12 @@ class Channel {
    */
   auto Get() -> T {
     std::unique_lock<std::mutex> lk(m_);
-    cv_.wait(lk, [&]() { return !q_.empty(); });
+    
+    while(q.empty()){
+      cv_.wait(lk);
+    }
+
+    // cv_.wait(lk, [&]() { return !q_.empty(); }); -> while(!predicate()){wait()}
     T element = std::move(q_.front());
     q_.pop();
     return element;
