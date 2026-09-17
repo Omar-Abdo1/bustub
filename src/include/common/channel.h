@@ -46,7 +46,7 @@ class Channel {
   auto Get() -> T {
     std::unique_lock<std::mutex> lk(m_);
     
-    while(q.empty()){
+    while(q_.empty()){
       cv_.wait(lk);
     }
 
