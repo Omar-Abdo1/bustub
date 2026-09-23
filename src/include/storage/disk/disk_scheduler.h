@@ -16,7 +16,7 @@
 #include <optional>
 #include <thread>  // NOLINT
 #include <vector>
-
+#include<algorithm>
 #include "common/channel.h"
 #include "storage/disk/disk_manager.h"
 

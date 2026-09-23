@@ -72,6 +72,8 @@ class FrameHeader {
   /** @brief The frame ID / index of the frame this header represents. */
   const frame_id_t frame_id_;
 
+  page_id_t current_page_id = -1;
+
   /** @brief The readers / writer latch for this frame. */
   std::shared_mutex rwlatch_;
 
@@ -88,13 +90,6 @@ class FrameHeader {
    */
   std::vector<char> data_;
 
-  /**
-   * TODO(P1): You may add any fields or helper functions under here that you think are necessary.
-   *
-   * One potential optimization you could make is storing an optional page ID of the page that the `FrameHeader` is
-   * currently storing. This might allow you to skip searching for the corresponding (page ID, frame ID) pair somewhere
-   * else in the buffer pool manager...
-   */
 };
 
 /**
@@ -161,6 +156,12 @@ class BufferPoolManager {
    * Note: Please ignore this for P1.
    */
   LogManager *log_manager_ __attribute__((__unused__));
+
+
+  auto FindAvailableFrame()->std::optional<frame_id_t>;
+
+  auto GetFrameHeader(page_id_t page_id) -> std::shared_ptr<FrameHeader>;
+
 
   /**
    * TODO(P1): You may add additional private members and helper functions if you find them necessary.

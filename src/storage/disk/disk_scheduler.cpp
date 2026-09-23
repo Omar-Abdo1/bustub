@@ -32,9 +32,12 @@ DiskScheduler::~DiskScheduler() {
 
 
 void DiskScheduler::Schedule(std::vector<DiskRequest> &requests) {
-    for(auto &req : requests){
-      
-      
+    
+  std::sort(requests.begin(),requests.end(),[&](const auto & a,const auto &b){
+       return a.page_id_<b.page_id_;
+  });
+  
+  for(auto &req : requests){
       request_queue_.Put(std::make_optional<DiskRequest>(std::move(req)));
     }
 }
@@ -54,7 +57,7 @@ void DiskScheduler::StartWorkerThread() {
         disk_manager_->WritePage(req.page_id_,req.data_);
       }
       else{
-          disk_manager_->ReadPage(req.page_id_,req.data_);
+          disk_manager_->ReadPage(req.page_id_,req.data_); // read the content of the page_id into the req_data 
       }
 
       req.callback_.set_value(true);
